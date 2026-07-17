@@ -1,0 +1,225 @@
+@import "tailwindcss";
+
+:root {
+  --mf-tomato: #e0311f;
+  --mf-tomato-soft: #ff6b4a;
+  --mf-cherry: #9b1b1f;
+  --mf-teal: #0d9488;
+  --mf-teal-soft: #14b8a6;
+  --mf-amber: #f59e0b;
+  --mf-ink: #141414;
+  --mf-ink-soft: #3f3f46;
+  --mf-mist: #f7f6f4;
+  --mf-surface: #ffffff;
+  --mf-blush: #ffe4dc;
+  --mf-line: rgba(20, 20, 20, 0.08);
+  --mf-shadow: 0 18px 50px rgba(20, 20, 20, 0.12);
+  --mf-gradient-hero: linear-gradient(
+    135deg,
+    #e0311f 0%,
+    #c41e1a 42%,
+    #9b1b1f 100%
+  );
+  --mf-gradient-fresh: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
+  --mf-gradient-glow: radial-gradient(
+    circle at 20% 20%,
+    rgba(245, 158, 11, 0.22),
+    transparent 42%
+  ),
+    radial-gradient(
+      circle at 80% 0%,
+      rgba(224, 49, 31, 0.16),
+      transparent 38%
+    ),
+    var(--mf-mist);
+  --background: var(--mf-mist);
+  --foreground: var(--mf-ink);
+  --font-display: var(--font-syne);
+  --font-heading: var(--font-sora);
+  --font-body: var(--font-figtree);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-tomato: var(--mf-tomato);
+  --color-cherry: var(--mf-cherry);
+  --color-teal: var(--mf-teal);
+  --color-amber: var(--mf-amber);
+  --color-ink: var(--mf-ink);
+  --color-mist: var(--mf-mist);
+  --color-blush: var(--mf-blush);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+  --font-heading: var(--font-heading);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--mf-gradient-glow);
+  color: var(--foreground);
+  font-family: var(--font-body), "Segoe UI", sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(224, 49, 31, 0.18);
+  color: var(--mf-ink);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 3px solid rgba(13, 148, 136, 0.55);
+  outline-offset: 3px;
+}
+
+.mf-container {
+  width: min(1180px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.mf-section {
+  padding-block: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.mf-title {
+  font-family: var(--font-heading), sans-serif;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+
+.mf-display {
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.mf-caption {
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  color: var(--mf-ink-soft);
+}
+
+.mf-gradient-text {
+  background: var(--mf-gradient-hero);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.mf-hero-bleed {
+  position: relative;
+  min-height: min(68dvh, 640px);
+  display: grid;
+  align-items: end;
+  overflow: hidden;
+  color: white;
+  background: #1a0f0d;
+}
+
+.mf-hero-bleed::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    rgba(20, 10, 8, 0.82) 0%,
+    rgba(20, 10, 8, 0.45) 48%,
+    rgba(20, 10, 8, 0.18) 100%
+  );
+  pointer-events: none;
+}
+
+.mf-hero-panel {
+  background: var(--mf-gradient-hero);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.mf-hero-panel::after {
+  content: "";
+  position: absolute;
+  inset: auto -20% -40% auto;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    rgba(245, 158, 11, 0.35),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.mf-glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+}
+
+.mf-shimmer {
+  background: linear-gradient(
+    110deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.35) 45%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  animation: mf-shimmer 2.8s ease-in-out infinite;
+}
+
+@keyframes mf-shimmer {
+  0% {
+    background-position: 120% 0;
+  }
+  100% {
+    background-position: -40% 0;
+  }
+}
+
+@keyframes mf-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.mf-float {
+  animation: mf-float 4.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .mf-shimmer,
+  .mf-float,
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "projeto-myfood",
+  "private": true,
+  "version": "0.1.0",
+  "description": "MyFood — plataforma de delivery com experiência app-like",
+  "scripts": {
+    "dev:frontend": "npm --prefix frontend run dev",
+    "dev:site": "npm --prefix frontend run dev:site",
+    "dev:backend": "npm --prefix backend run start:dev",
+    "build:frontend": "npm --prefix frontend run build",
+    "build:site": "npm --prefix frontend run build:site",
+    "build:backend": "npm --prefix backend run build",
+    "start:frontend": "npm --prefix frontend run start",
+    "start:backend": "npm --prefix backend run start:prod"
+  }
+}
