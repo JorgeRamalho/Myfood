@@ -4,13 +4,24 @@
   "version": "0.1.0",
   "description": "MyFood — plataforma de delivery com experiência app-like",
   "scripts": {
-    "dev:frontend": "npm --prefix frontend run dev",
+    "dev": "npm run dev:site",
     "dev:site": "npm --prefix frontend run dev:site",
+    "dev:frontend": "npm --prefix frontend run dev",
     "dev:backend": "npm --prefix backend run start:dev",
-    "build:frontend": "npm --prefix frontend run build",
+    "dev:stack": "npx --yes concurrently -n api,web -c blue,green \"npm run dev:backend\" \"npm run dev:site\"",
+    "build": "npm run build:site",
     "build:site": "npm --prefix frontend run build:site",
+    "build:frontend": "npm --prefix frontend run build",
     "build:backend": "npm --prefix backend run build",
-    "start:frontend": "npm --prefix frontend run start",
-    "start:backend": "npm --prefix backend run start:prod"
+    "preview:site": "npm --prefix frontend run preview:site",
+    "start:backend": "npm --prefix backend run start:prod",
+    "sync:seed": "node backend/scripts/sync-seed-from-frontend.mjs",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:migrate": "npm --prefix backend run prisma:migrate",
+    "db:seed": "npm --prefix backend run prisma:seed",
+    "db:setup": "npm run db:up && npm run db:migrate && npm run db:seed",
+    "lhci": "npm --prefix frontend run build:site && npx --yes @lhci/cli@0.14.0 autorun --config=./lighthouserc.json",
+    "test:e2e": "node ./scripts/e2e-smoke.mjs"
   }
 }

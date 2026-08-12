@@ -5,151 +5,131 @@ Website de restaurantes online — inspirado em iFood, 99Food e Uber Eats — co
 **Slogan:** O sabor que vem até você.  
 **Tagline:** Peça. Saboreie. Repita.
 
----
-
-## Avaliação rápida do mercado (web)
-
-| Critério | iFood | 99Food | Uber Eats | MyFood (proposta) |
-|---|---|---|---|---|
-| Modelo | Marketplace + logística | Marketplace integrado ao ecossistema 99 | Marketplace global | Marketplace app-like (web-first) |
-| Força | Escala, cupons, marca BR | Integração corrida/entrega | UX limpa e global | Identidade sofisticada + usabilidade guiada |
-| Dor comum | Poluição visual / ruído promocional | Menor percepção de marca food | Menos “local” em alguns mercados | Clareza, acessibilidade e hierarquia visual |
-| Oportunidade MyFood | — | — | — | Website responsivo, microinterações, design system e QR de instalação |
-
-**Aprendizados aplicados no MyFood**
-- Header sticky + menu desktop/mobile
-- Caminhos curtos: Home → Categoria → Restaurante → Sacola → Pedido
-- Feedback visual de status (pedido a caminho)
-- Hero full-bleed com branding forte no primeiro viewport
-- Acessibilidade: foco visível, skip link, `aria-*`, contraste e `prefers-reduced-motion`
+Documentação completa: [docs/README.md](./docs/README.md)  
+Pesquisa e roadmap: [docs/planning/roadmap.md](./docs/planning/roadmap.md)  
+Marca: [docs/brand/guidelines.md](./docs/brand/guidelines.md)
 
 ---
 
-## Identidade visual
-
-### Marca
-- **Nome:** MyFood
-- **Logomarca:** `frontend/public/brand/logo-mark.png` (prato + monograma M)
-- **Wordmark:** `frontend/public/brand/wordmark.png`
-- **Hero:** `frontend/public/brand/hero-food.png`
-
-### Paleta
-
-| Token | Hex | Uso |
-|---|---|---|
-| Tomato | `#E0311F` | Primária / CTA |
-| Cherry | `#9B1B1F` | Gradiente profundo |
-| Teal | `#0D9488` | Destaques frescos / sucesso |
-| Amber | `#F59E0B` | Avaliações / energia |
-| Ink | `#141414` | Texto |
-| Mist | `#F7F6F4` | Fundo |
-| Blush | `#FFE4DC` | Superfícies suaves |
-
-**Gradientes**
-- Hero: `tomato → cherry`
-- Fresh: `teal → teal-soft`
-- Atmosphere: raios âmbar + tomato sobre mist
-
-### Tipografia
-- **Display (marca):** Syne
-- **Títulos:** Sora
-- **Corpo / UI:** Figtree
-- Hierarquia: Display > Title > Body > Caption
-
----
-
-## Estrutura de pastas
+## Estrutura (raiz enxuta)
 
 ```text
 Projeto-Myfood/
-├── frontend/                 # Website (HTML/CSS/JS + React) e Next.js
-│   ├── index.html            # Entrada HTML do site
-│   ├── style.css             # Estilos globais do site
-│   ├── js.script.js          # Scripts utilitários
-│   ├── react/                # App React (Vite + React Router)
-│   ├── public/brand/         # Logo, wordmark, fotos
-│   └── src/                  # Versão Next.js (App Router)
-├── backend/                  # NestJS — API REST
-│   └── src/
-│       ├── modules/          # auth, restaurants, menu, orders
-│       ├── data/             # Seed em memória
-│       └── common/           # Extensões futuras
-└── README.md
+├── index.html              # Redirect → frontend/
+├── package.json            # Scripts orquestradores
+├── docker-compose.yml      # Postgres (porta host 5434)
+├── README.md
+├── .gitignore
+├── .vscode/                # Live Server
+├── docs/                   # Documentação profissional
+├── frontend/               # Site canônico: Vite + React
+│   ├── index.html          # Redirect → dist-site
+│   ├── vite.config.js · package.json
+│   ├── config/             # Ferramentas (ESLint)
+│   ├── src/                # App (HTML Vite + React)
+│   ├── public/brand|media  # Assets (fonte da verdade)
+│   └── archive/next/       # Next.js arquivado (ADR-002)
+└── backend/                # NestJS + Prisma — API REST
+    ├── prisma/             # schema, migrate, seed
+    └── src/modules/        # auth, restaurants, menu, orders
 ```
+
+Detalhes: [docs/structure/repository.md](./docs/structure/repository.md) · ADRs: [canônico](./docs/architecture/frontend-decision.md) · [arquivo Next](./docs/architecture/frontend-archive.md)
 
 ---
 
 ## Como rodar
 
-### Frontend — site HTML/CSS/JS + React (porta 5173)
+### Frontend (Vite · porta 5173)
+
 ```bash
 cd frontend
 npm install
-npm run dev:site
-```
-
-Arquivos principais:
-- `frontend/index.html`
-- `frontend/style.css`
-- `frontend/js.script.js`
-- `frontend/react/`
-
-### Frontend — Next.js (porta 3000)
-```bash
-cd frontend
 npm run dev
 ```
 
-### Backend (porta 3333)
+Build estático (Live Server / preview):
+
 ```bash
+npm run build:site
+```
+
+Na raiz: `npm run dev` ou `npm run build:site`.
+
+### Backend (Nest · porta 3333)
+
+Requer Docker Desktop + Postgres:
+
+```bash
+npm run db:setup   # sobe Postgres :5434, migrate e seed Guaíra
 cd backend
 npm install
 npm run start:dev
 ```
 
-API base: `http://localhost:3333/api`
-
-### Endpoints principais
-- `GET /api/health`
-- `POST /api/auth/guest`
-- `GET /api/restaurants`
-- `GET /api/restaurants/featured`
-- `GET /api/restaurants/:id`
-- `GET /api/restaurants/:restaurantId/menu`
-- `GET /api/orders`
-- `POST /api/orders`
+API: `http://localhost:3333/api` — ver [docs/api/endpoints.md](./docs/api/endpoints.md).
 
 ---
 
-## Páginas do website
+## Páginas
 
 | Rota | Função |
 |---|---|
-| `/` | Home com hero full-bleed, categorias e restaurantes |
-| `/buscar` | Busca + filtros em grid |
-| `/restaurante/[id]` | Cardápio e adicionar à sacola |
-| `/carrinho` | Sacola e checkout simulado |
+| `/` | Home — hero, categorias, restaurantes |
+| `/buscar` | Busca + filtros |
+| `/restaurante/[id]` | Cardápio |
+| `/carrinho` | Sacola / checkout simulado |
 | `/pedidos` | Histórico e status |
-| `/baixar` | QR Codes Play Store / App Store |
+| `/baixar` | QR Play Store / App Store |
 | `/perfil` | Conta e preferências |
 
 ---
 
-## Acessibilidade e UX
+## API + frontend juntos
 
-- Skip link para conteúdo principal
-- Contraste alto em textos e CTAs
-- Foco visível (`:focus-visible`)
-- Labels e `aria-label` em ações ícone
-- Respeito a `prefers-reduced-motion`
-- Layout website responsivo (container ~1180px) com header e footer
+```bash
+npm run db:up       # Postgres (se ainda não estiver up)
+npm run dev:stack   # Nest + Vite
+```
 
----
+Ou em dois terminais: `npm run dev:backend` e `npm run dev:site`.
 
-## Próximos passos sugeridos
+Sem a API no ar, o site ainda abre com **fallback** dos mocks locais (exceto checkout).
 
-1. Conectar frontend à API NestJS (substituir mocks)
-2. Persistência com PostgreSQL + Prisma
-3. Auth real (e-mail/OTP)
-4. Painel do restaurante e admin
-5. PWA (manifest + service worker) e links reais das lojas
+## Persistência (Fase 4)
+
+| Script | Função |
+|---|---|
+| `npm run db:up` | `docker compose up -d` |
+| `npm run db:migrate` | Prisma migrate |
+| `npm run db:seed` | Catálogo Guaíra no banco |
+| `npm run db:setup` | up + migrate + seed |
+
+Detalhes: [ADR-003](./docs/architecture/persistence-prisma.md).
+
+## Auth + PWA (Fase 5)
+
+- Login/registro em `/perfil` (JWT). Demo cliente: `cliente@myfood.app` / `myfood123`
+- Guest ainda funciona no checkout (JWT assinado)
+- PWA: `vite-plugin-pwa` + CTA **Instalar MyFood** em `/baixar`
+- Env: `JWT_SECRET` em `backend/.env` (ver `.env.example`)
+
+Detalhes: [ADR-004](./docs/architecture/auth-jwt.md).
+
+## Painel operador (Fase 6)
+
+- Rota `/painel` — atualiza status dos pedidos
+- Demo restaurante: `restaurante@myfood.app` / `myfood123`
+- Demo admin: `admin@myfood.app` / `myfood123`
+- Checkout mostra endereço demo Guaíra + pagamento na entrega
+
+## Qualidade (Fase 3)
+
+```bash
+npm run lhci          # Lighthouse CI (após build)
+npm run test:e2e      # smoke Playwright (API + site no ar)
+```
+
+Detalhes: [docs/quality/README.md](./docs/quality/README.md).
+
+Lista completa: [docs/planning/roadmap.md](./docs/planning/roadmap.md).

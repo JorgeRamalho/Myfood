@@ -1,0 +1,98 @@
+name: Qualidade (Lighthouse + e2e smoke)
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install frontend
+        run: npm --prefix frontend ci
+      - name: Build site
+        run: npm --prefix frontend run build:site
+      - name: Install Lighthouse CI
+        run: npm install --no-save @lhci/cli@0.14.0
+      - name: Run Lighthouse CI
+        run: npx lhci autorun --config=./lighthouserc.json
+
+  e2e-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: myfood
+          POSTGRES_PASSWORD: myfood
+          POSTGRES_DB: myfood
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U myfood -d myfood"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://myfood:myfood@127.0.0.1:5432/myfood?schema=public
+      JWT_SECRET: myfood-ci-secret
+      PORT: "3333"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            frontend/package-lock.json
+            backend/package-lock.json
+      - name: Install deps
+        run: |
+          npm --prefix frontend ci
+          npm --prefix backend ci
+      - name: Prisma migrate + seed
+        working-directory: backend
+        run: |
+          npx prisma migrate deploy
+          npx prisma generate
+          npm run prisma:seed
+      - name: Build site
+        run: npm --prefix frontend run build:site
+      - name: Build API
+        run: npm --prefix backend run build
+      - name: Install Playwright
+        run: |
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start API
+        run: npm --prefix backend run start:prod &
+      - name: Wait for API
+        run: |
+          for i in $(seq 1 40); do
+            if curl -sf http://127.0.0.1:3333/api/health >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          echo "API did not start" && exit 1
+      - name: Start preview
+        run: npm --prefix frontend run preview:site -- --host 127.0.0.1 --port 5500 --strictPort &
+      - name: Wait for site
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:5500/ >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          echo "Preview did not start" && exit 1
+      - name: Smoke e2e
+        run: node scripts/e2e-smoke.mjs
+        env:
+          E2E_BASE_URL: http://127.0.0.1:5500
+          E2E_API_URL: http://127.0.0.1:3333/api

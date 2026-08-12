@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="MyFood — O sabor que vem até você. Delivery de restaurantes online."
+    />
+    <meta name="theme-color" content="#E0311F" />
+    <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://myfood.app/" />
+
+    <title>MyFood · O sabor que vem até você.</title>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="MyFood" />
+    <meta property="og:title" content="MyFood · O sabor que vem até você." />
+    <meta
+      property="og:description"
+      content="Peça nos melhores restaurantes da sua região. Delivery claro, rápido e com instalação do app por QR Code."
+    />
+    <meta property="og:url" content="https://myfood.app/" />
+    <meta property="og:image" content="./brand/hero-food.png" />
+    <meta property="og:image:alt" content="MyFood — comida fresca para delivery" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="MyFood · O sabor que vem até você." />
+    <meta
+      name="twitter:description"
+      content="Peça nos melhores restaurantes da sua região. Delivery claro, rápido e com instalação do app por QR Code."
+    />
+    <meta name="twitter:image" content="./brand/hero-food.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Sora:wght@500;600;700&family=Syne:wght@600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" type="image/png" href="./brand/logo-mark.png" />
+    <link rel="apple-touch-icon" href="./brand/logo-mark.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="MyFood" />
+    <link rel="stylesheet" href="./styles/style.css" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "@id": "https://myfood.app/#organization",
+            "name": "MyFood",
+            "url": "https://myfood.app/",
+            "logo": "./brand/logo-mark.png",
+            "slogan": "O sabor que vem até você.",
+            "description": "Website de delivery MyFood: restaurantes perto de você, pedidos guiados e instalação do app por QR Code."
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://myfood.app/#website",
+            "url": "https://myfood.app/",
+            "name": "MyFood",
+            "description": "MyFood — O sabor que vem até você. Delivery de restaurantes online.",
+            "publisher": { "@id": "https://myfood.app/#organization" },
+            "inLanguage": "pt-BR"
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo-principal">Ir para o conteúdo</a>
+
+    <div id="root"></div>
+
+    <script type="module" src="./main.jsx"></script>
+  </body>
+</html>

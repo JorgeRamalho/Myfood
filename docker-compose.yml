@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: myfood-postgres
+    restart: unless-stopped
+    ports:
+      # Host 5434 evita conflito com Postgres local (5432) e outros containers (5433)
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: myfood
+      POSTGRES_PASSWORD: myfood
+      POSTGRES_DB: myfood
+    volumes:
+      - myfood_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U myfood -d myfood"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  myfood_pg_data:

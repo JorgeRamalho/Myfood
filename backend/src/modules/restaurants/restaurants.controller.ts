@@ -6,26 +6,26 @@ export class RestaurantsController {
   constructor(private readonly restaurantsService: RestaurantsService) {}
 
   @Get()
-  findAll(
+  async findAll(
     @Query('category') category?: string,
     @Query('q') q?: string,
   ) {
     return {
-      data: this.restaurantsService.findAll(category, q),
+      data: await this.restaurantsService.findAll(category, q),
     };
   }
 
   @Get('featured')
-  findFeatured() {
+  async findFeatured() {
     return {
-      data: this.restaurantsService.findFeatured(),
+      data: await this.restaurantsService.findFeatured(),
     };
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return {
-      data: this.restaurantsService.findOne(id),
+      data: await this.restaurantsService.findOne(id),
     };
   }
 }

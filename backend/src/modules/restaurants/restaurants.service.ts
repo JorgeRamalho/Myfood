@@ -1,9 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { restaurants } from '../../data/seed';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class RestaurantsService {
-  findAll(category?: string, q?: string) {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async findAll(category?: string, q?: string) {
+    const restaurants = await this.prisma.restaurant.findMany({
+      orderBy: { name: 'asc' },
+    });
+
     return restaurants.filter((restaurant) => {
       const matchesCategory =
         !category || restaurant.categories.includes(category);
@@ -13,12 +19,17 @@ export class RestaurantsService {
     });
   }
 
-  findFeatured() {
-    return restaurants.filter((restaurant) => restaurant.featured);
+  async findFeatured() {
+    return this.prisma.restaurant.findMany({
+      where: { featured: true },
+      orderBy: { rating: 'desc' },
+    });
   }
 
-  findOne(id: string) {
-    const restaurant = restaurants.find((item) => item.id === id);
+  async findOne(id: string) {
+    const restaurant = await this.prisma.restaurant.findUnique({
+      where: { id },
+    });
     if (!restaurant) {
       throw new NotFoundException(`Restaurante ${id} não encontrado`);
     }
